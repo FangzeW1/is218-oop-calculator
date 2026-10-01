@@ -43,13 +43,15 @@ def run() -> None:
         if command == "exit":
             break
         if command in operations:
-            # EVALUATE: this stage assumes the user supplies valid numbers.
-            a = float(input("First number: "))
-            b = float(input("Second number: "))
+            try:
+                a = float(input("First number: "))
+                b = float(input("Second number: "))
+            except ValueError:
+                print("Invalid number or result. Please use finite numbers.")
+                continue
             operation_class = operations[command]
             calculation = operation_class(a, b)
             history.add(calculation)
-            # PRINT: arithmetic remains the object's responsibility.
             print(f"Result: {calculation.get_result():g}")
         elif command == "history":
             show_history(history)

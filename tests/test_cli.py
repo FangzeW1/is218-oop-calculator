@@ -44,3 +44,17 @@ def test_mixed_case_arithmetic_command(monkeypatch, capsys):
     output = session(monkeypatch, capsys, [" AdD ", "12", " 1 ", "exit"])
     assert "Result: 13" in output
     assert output.endswith("Goodbye!\n")
+
+def test_invalid_first_number_recovers(monkeypatch, capsys):
+    output = session(monkeypatch, capsys,
+                     ["add", "hello", "history", "add", "2", "3", "exit"])
+    assert "Invalid number or result." in output
+    assert "No calculations in history." in output
+    assert "Result: 5" in output
+
+def test_invalid_second_number_recovers(monkeypatch, capsys):
+    output = session(monkeypatch, capsys,
+                     ["subtract", "10", "hello", "history", "subtract", "8", "3", "exit"])
+    assert "Invalid number or result." in output
+    assert "No calculations in history." in output
+    assert "Result: 5" in output
