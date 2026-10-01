@@ -1,4 +1,5 @@
-from calculator.calculation import Add
+from calculator.calculation import Calculation, Add, Subtract
+import pytest
 
 def test_add():
     calculation = Add(10, 5)
@@ -26,3 +27,31 @@ def test_add_positive_and_negative():
     assert result == 5
     assert calculation.a == 8
     assert calculation.b == -3
+
+def test_subtract():
+    assert Subtract(20, 7).get_result() == 13
+
+def test_subtract_can_return_a_negative_result():
+    assert Subtract(5, 10).get_result() == -5
+
+def test_calculation_is_abstract():
+    # Expecting an exception is a testable behavior, not a failed test.
+    with pytest.raises(TypeError):
+        Calculation(10, 5)
+
+def test_polymorphism():
+    calculations = [Add(10, 5), Subtract(20, 7)]
+    results = []
+    for calculation in calculations:
+        results.append(calculation.get_result())
+    assert results == [15, 13]
+
+def test_multiple_calculations():
+    calculations = [
+        Add(4, 6),
+        Subtract(3, 8),
+        Add(10, -2),]
+    results = []
+    for calculation in calculations:
+        results.append(calculation.get_result())
+    assert results == [10, -5, 8]
