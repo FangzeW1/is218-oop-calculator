@@ -2,6 +2,7 @@
 
 from calculator.calculation import Add, Calculation, Subtract
 from calculator.history import History
+from math import isfinite
 
 
 HELP = """Commands:
@@ -41,60 +42,65 @@ def run() -> None:
 
     print('OOP Calculator\n\nType "help" for commands.')
 
-    while True:
-        # READ: the terminal gives us text; normalize commands for comparison.
-        command = input("> ").strip().lower()
+    try:
+        while True:
+            command = input("> ").strip().lower()
 
-        if command == "exit":
-            break
+            if command == "exit":
+                break
 
-        if command in operations:
-            try:
-                a = float(input("First number: "))
-                b = float(input("Second number: "))
-            except ValueError:
-                print("Invalid number or result. Please use finite numbers.")
-                continue
+            if command in operations:
+                try:
+                    a = float(input("First number: "))
+                    if not isfinite(a):
+                        raise ValueError
 
-            operation_class = operations[command]
-            calculation = operation_class(a, b)
+                    b = float(input("Second number: "))
+                    if not isfinite(b):
+                        raise ValueError
 
-            # Save only successful calculations.
-            history.add(calculation)
+                    operation_class = operations[command]
+                    calculation = operation_class(a, b)
 
-            print(f"Result: {calculation.get_result():g}")
+                    if not isfinite(calculation.get_result()):
+                        raise ValueError
 
-        elif command == "history":
-            show_history(history)
+                except ValueError:
+                    print("Invalid number or result. Please use finite numbers.")
+                    continue
 
-        elif command == "remove":
-            show_history(history)
+                history.add(calculation)
+                print(f"Result: {calculation.get_result():g}")
 
-            if not history.get_history():
-                continue
+            elif command == "history":
+                show_history(history)
 
-            try:
-                number = int(input("Enter calculation number to remove: "))
+            elif command == "remove":
+                show_history(history)
 
-                # People count from 1; Python indexes start at 0.
-                removed = history.remove(number - 1)
+                if not history.get_history():
+                    continue
 
-            except ValueError:
-                print("Please enter a whole calculation number.")
+                try:
+                    number = int(input("Enter calculation number to remove: "))
+                    removed = history.remove(number - 1)
 
-            except IndexError:
-                print("Calculation does not exist.")
+                except ValueError:
+                    print("Please enter a whole calculation number.")
+
+                except IndexError:
+                    print("Calculation does not exist.")
+
+                else:
+                    print(f"Removed: {describe(removed)}")
+
+            elif command == "help":
+                print(HELP)
 
             else:
-                # This runs only when the removal succeeded.
-                print(f"Removed: {describe(removed)}")
+                print('Unknown command.\nType "help" for available commands.')
 
-        elif command == "help":
-            print(HELP)
-
-        else:
-            print('Unknown command.\nType "help" for available commands.')
-
-        # LOOP: reaching the end starts another iteration at the input prompt.
+    except (EOFError, KeyboardInterrupt):
+        print()
 
     print("Goodbye!")
