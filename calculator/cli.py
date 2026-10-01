@@ -27,7 +27,9 @@ def show_history(history: History) -> None:
     if not calculations:
         print("No calculations in history.")
         return
+
     print("Calculation History\n")
+
     # enumerate gives us a display number alongside each calculation object.
     for number, calculation in enumerate(calculations, start=1):
         print(f"{number}. {describe(calculation)}")
@@ -36,12 +38,16 @@ def show_history(history: History) -> None:
 def run() -> None:
     history = History()
     operations = {"add": Add, "subtract": Subtract}
+
     print('OOP Calculator\n\nType "help" for commands.')
+
     while True:
         # READ: the terminal gives us text; normalize commands for comparison.
         command = input("> ").strip().lower()
+
         if command == "exit":
             break
+
         if command in operations:
             try:
                 a = float(input("First number: "))
@@ -49,22 +55,46 @@ def run() -> None:
             except ValueError:
                 print("Invalid number or result. Please use finite numbers.")
                 continue
+
             operation_class = operations[command]
             calculation = operation_class(a, b)
+
+            # Save only successful calculations.
             history.add(calculation)
+
             print(f"Result: {calculation.get_result():g}")
+
         elif command == "history":
             show_history(history)
+
         elif command == "remove":
             show_history(history)
-            if history.get_history():
+
+            if not history.get_history():
+                continue
+
+            try:
                 number = int(input("Enter calculation number to remove: "))
+
                 # People count from 1; Python indexes start at 0.
                 removed = history.remove(number - 1)
+
+            except ValueError:
+                print("Please enter a whole calculation number.")
+
+            except IndexError:
+                print("Calculation does not exist.")
+
+            else:
+                # This runs only when the removal succeeded.
                 print(f"Removed: {describe(removed)}")
+
         elif command == "help":
             print(HELP)
+
         else:
             print('Unknown command.\nType "help" for available commands.')
+
         # LOOP: reaching the end starts another iteration at the input prompt.
+
     print("Goodbye!")
