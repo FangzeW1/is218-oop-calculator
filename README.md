@@ -4,7 +4,7 @@ This project is a command-line calculator written in Python using object-oriente
 
 # Setup
 
-Clone the repository and enter the project directory:
+Clone the repository using SSH (requires SSH authentication to already be configured with GitHub), then enter the project directory:
 
 ```bash
 git clone git@github.com:FangzeW1/is218-oop-calculator.git
@@ -45,3 +45,11 @@ Email and text-message notification objects could share a common notification in
 # What design knowledge transfers to another language?
 Object-oriented ideas such as abstraction, encapsulation, inheritance, polymorphism, and separating responsibilities can transfer to other programming languages. Testing principles and designing classes around clear interfaces can also transfer. However, I would still need to learn the new language's syntax and runtime rules, such as how it handles classes, interfaces, exceptions, types, and packages.
 
+=======================================================================
+# README Reproducibility Check
+I followed the README from a fresh clone in a separate directory and created a new virtual environment. I was able to install the requirements, run the calculator, and run the test suite successfully.
+
+As far as confusion is concerned, the clone instructions assume SSH is already configured with GitHub. Someone without a GitHub SSH key configured would get an authentication error even though they followed the README correctly.
+
+# Investigating a Coverage Failure
+If all tests pass but coverage fails, I would first look at the coverage report and check the `Missing` column to determine which lines or branches were not executed. I would then identify what behavior would cause those paths to execute and add a test with an assertion that verifies the expected result. I would not remove or exclude code simply to increase the coverage percentage.
