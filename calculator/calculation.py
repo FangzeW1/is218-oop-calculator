@@ -20,18 +20,10 @@ class Calculation(ABC):
         # The docstring is a valid method body. There is no shared arithmetic.
         # Concrete subclasses must override this method before instantiation.
 
-class Add:
-    def __init__(self, a, b):
-        self.a = a
-        self.b = b
-
-    def get_result(self):
+class Add(Calculation):
+    def get_result(self) -> float:
         return self.a + self.b
 
-class Subtract:
-    def __init__(self, a, b):
-        self.a = a
-        self.b = b
-
-    def get_result(self):
+class Subtract(Calculation):
+    def get_result(self) -> float:
         return self.a - self.b
